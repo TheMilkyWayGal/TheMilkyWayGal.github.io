@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redstone Network</title>
+    <style>
+        /* Global Styles */
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #111;
+            color: white;
+            overflow: hidden;
+            height: 100vh;
+        }
+        
+        /* Red Borders - Bigger */
+        .top-border, .bottom-border {
+            height: 15px;
+            background-color: red;
+            width: 100%;
+            position: fixed;
+            z-index: 100;
+        }
+        .top-border { top: 0; }
+        .bottom-border { bottom: 0; }
+        
+        /* Header Styles */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 30px;
+            background-color: rgba(0, 0, 0, 0.8);
+            position: relative;
+            z-index: 10;
+            margin-top: 15px;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo h1 {
+            font-size: 24px;
+            margin: 0;
+            color: #fff;
+        }
+        
+        /* Navigation - Reordered links */
+        .nav-links {
+            display: flex;
+            gap: 10px;
+        }
+        
+        .nav-links a {
+            color: white;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 16px;
+            transition: all 0.3s;
+            padding: 8px 15px;
+            border: 2px solid #1a75ff;
+            border-radius: 5px;
+            background-color: rgba(26, 117, 255, 0.2);
+        }
+        
+        /* Specific link ordering */
+        .nav-links a:nth-child(1) { order: 6; } /* Home */
+        .nav-links a:nth-child(2) { order: 5; } /* Features */
+        .nav-links a:nth-child(3) { order: 4; } /* About */
+        .nav-links a:nth-child(4) { order: 1; } /* Discord */
+        .nav-links a:nth-child(5) { order: 3; } /* FAQ */
+        .nav-links a:nth-child(6) { order: 2; } /* Rules */
+        .nav-links a:nth-child(7) { order: 7; } /* Donation Info */
+        
+        .nav-links a:hover {
+            background-color: rgba(26, 117, 255, 0.4);
+            transform: translateY(-2px);
+        }
+        
+        .nav-links a.active {
+            background-color: rgba(26, 117, 255, 0.6);
+            box-shadow: 0 0 10px #1a75ff;
+        }
+        
+        /* Main Content Styles */
+        .main-content {
+            height: calc(100vh - 150px);
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            position: relative;
+            overflow: auto;
+            padding: 20px;
+            margin-top: 10px;
+            background-color: #222;
+        }
+        
+        /* Grid Styles */
+        .grid-container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: rgba(0, 0, 0, 0.7);
+            border-radius: 10px;
+            z-index: 2;
+            position: relative;
+        }
+        
+        /* Features Page (3x5 grid) */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        /* FAQ Page (2x2 grid) */
+        .faq-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        /* Rules Page (4x3 grid) */
+        .rules-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        /* About Page (3x3 grid) */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+        
+        /* Donation Page (4x5 grid) */
+        .donate-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 15px;
+        }
+        
+        /* Grid Items */
+        .grid-item {
+            background-color: rgba(30, 30, 30, 0.8);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid red;
+            min-height: 80px;
+        }
+        
+        .grid-item h3 {
+            margin-top: 0;
+            color: #ff5555;
+            font-size: 16px;
+        }
+        
+        .grid-item p {
+            margin-bottom: 0;
+            font-size: 14px;
+        }
+        
+        /* Copyright */
+        .copyright {
+            position: fixed;
+            bottom: 25px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            font-size: 12px;
+            z-index: 10;
+            color: #aaa;
+        }
+        
+        /* Page Transition */
+        .page {
+            display: none;
+            height: 100%;
+            width: 100%;
+        }
+        
+        .active-page {
+            display: block;
+        }
+        
+        /* Discord Button */
+        .discord-button {
+            padding: 15px 30px;
+            background-color: #7289DA;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            text-decoration: none;
+            z-index: 2;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .discord-button:hover {
+            background-color: #677bc4;
+        }
+    </style>
+</head>
+<body>
+    <!-- Red Borders -->
+    <div class="top-border"></div>
+    <div class="bottom-border"></div>
+    
+    <!-- Header -->
+    <div class="header">
+        <div class="logo">
+            <h1>Redstone Network</h1>
+        </div>
+        <div class="nav-links">
+            <a href="#" onclick="showPage('home')" class="active">Home</a>
+            <a href="#" onclick="showPage('features')">Features</a>
+            <a href="#" onclick="showPage('about')">About</a>
+            <a href="https://discord.gg/vMRJgajYMW" target="_blank">Discord</a>
+            <a href="#" onclick="showPage('faq')">FAQ</a>
+            <a href="#" onclick="showPage('rules')">Rules</a>
+            <a href="#" onclick="showPage('donate')">Donation Info</a>
+        </div>
+    </div>
+    
+    <!-- Home Page -->
+    <div id="home" class="page active-page">
+        <div class="main-content" style="justify-content: center; align-items: center;">
+            <a href="https://discord.gg/vMRJgajYMW" class="discord-button" target="_blank">Join Discord</a>
+        </div>
+    </div>
+    
+    <!-- Features Page -->
+    <div id="features" class="page">
+        <div class="main-content">
+            <div class="grid-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff5555;">Server Features</h2>
+                <div class="features-grid">
+                    <div class="grid-item"><h3>Custom Enchants</h3><p>Unique powerful enchantments</p></div>
+                    <div class="grid-item"><h3>Spawner System</h3><p>Custom mob spawners</p></div>
+                    <div class="grid-item"><h3>Player Shops</h3><p>Sell items to other players</p></div>
+                    <div class="grid-item"><h3>Ranks</h3><p>Special perks and abilities</p></div>
+                    <div class="grid-item"><h3>PvP Arenas</h3><p>Dedicated combat zones</p></div>
+                    <div class="grid-item"><h3>Events</h3><p>Regular server events</p></div>
+                    <div class="grid-item"><h3>Economy</h3><p>Player-driven market</p></div>
+                    <div class="grid-item"><h3>Quests</h3><p>Challenging objectives</p></div>
+                    <div class="grid-item"><h3>Custom Items</h3><p>Unique weapons/tools</p></div>
+                    <div class="grid-item"><h3>Teams</h3><p>Form alliances</p></div>
+                    <div class="grid-item"><h3>Leaderboards</h3><p>Track your progress</p></div>
+                    <div class="grid-item"><h3>Daily Rewards</h3><p>Login bonuses</p></div>
+                    <div class="grid-item"><h3>Anti-Cheat</h3><p>Fair gameplay</p></div>
+                    <div class="grid-item"><h3>Friendly Staff</h3><p>Always available</p></div>
+                    <div class="grid-item"><h3>Regular Updates</h3><p>New content often</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- About Page -->
+    <div id="about" class="page">
+        <div class="main-content">
+            <div class="grid-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff5555;">About Us</h2>
+                <div class="about-grid">
+                    <div class="grid-item"><h3>Our Story</h3><p>Founded in 2023</p></div>
+                    <div class="grid-item"><h3>Staff Team</h3><p>Dedicated moderators</p></div>
+                    <div class="grid-item"><h3>Server Specs</h3><p>High performance</p></div>
+                    <div class="grid-item"><h3>Community</h3><p>Friendly players</p></div>
+                    <div class="grid-item"><h3>Plugins</h3><p>Custom coded</p></div>
+                    <div class="grid-item"><h3>Vision</h3><p>Fair and fun</p></div>
+                    <div class="grid-item"><h3>Updates</h3><p>Weekly improvements</p></div>
+                    <div class="grid-item"><h3>Support</h3><p>Quick responses</p></div>
+                    <div class="grid-item"><h3>Future Plans</h3><p>More content coming</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- FAQ Page -->
+    <div id="faq" class="page">
+        <div class="main-content">
+            <div class="grid-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff5555;">Frequently Asked Questions</h2>
+                <div class="faq-grid">
+                    <div class="grid-item">
+                        <h3>Q: How do I use spawners?</h3>
+                        <p>A: Place down the spawner cage and place the egg in and wait for them to spawn.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Q: How do I report a player?</h3>
+                        <p>A: Join our discord and create a ticket.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Q: How do i use custom enchants?</h3>
+                        <p>A: Use the enchant shard get the book go into the gui enchant and click use enchant.</p>
+                    </div>
+                    <div class="grid-item">
+                        <h3>Q: Where can I find more help?</h3>
+                        <p>A: Join our Discord! Code on scoreboard</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Rules Page -->
+    <div id="rules" class="page">
+        <div class="main-content">
+            <div class="grid-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff5555;">Server Rules</h2>
+                <div class="rules-grid">
+                    <div class="grid-item"><h3>1. Be respectful to others.</h3></div>
+                    <div class="grid-item"><h3>2. No spamming or advertising.</h3></div>
+                    <div class="grid-item"><h3>3. Follow staff instructions.</h3></div>
+                    <div class="grid-item"><h3>4. No duping/hacking.</h3></div>
+                    <div class="grid-item"><h3>5. Report bugs to our staff.</h3></div>
+                    <div class="grid-item"><h3>6. No 3v1.</h3></div>
+                    <div class="grid-item"><h3>7. No breaking sets.</h3></div>
+                    <div class="grid-item"><h3>8. Team of 8 only.</h3></div>
+                    <div class="grid-item"><h3>9. No C-Logging.</h3></div>
+                    <div class="grid-item"><h3>10. Follow staff instructions.</h3></div>
+                    <div class="grid-item"><h3>11. Be Responsible.</h3></div>
+                    <div class="grid-item"><h3>12. Have fun and enjoy the game!</h3></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Donation Info Page -->
+    <div id="donate" class="page">
+        <div class="main-content">
+            <div class="grid-container">
+                <h2 style="text-align: center; margin-bottom: 30px; color: #ff5555;">Donation Information</h2>
+                <div class="donate-grid">
+                    <div class="grid-item"><h3>Stone Rank</h3><p>$5 - Basic perks</p></div>
+                    <div class="grid-item"><h3>Iron Rank</h3><p>$10 - Extra commands</p></div>
+                    <div class="grid-item"><h3>Gold Rank</h3><p>$20 - Premium features</p></div>
+                    <div class="grid-item"><h3>Diamond Rank</h3><p>$30 - VIP treatment</p></div>
+                    <div class="grid-item"><h3>Emerald Rank</h3><p>$50 - Exclusive items</p></div>
+                    <div class="grid-item"><h3>Netherite Rank</h3><p>$75 - Legendary status</p></div>
+                    <div class="grid-item"><h3>Custom Rank</h3><p>$100+ - Personalized</p></div>
+                    <div class="grid-item"><h3>Payment Methods</h3><p>PayPal, Crypto</p></div>
+                    <div class="grid-item"><h3>Benefits</h3><p>Cosmetic & Gameplay</p></div>
+                    <div class="grid-item"><h3>Perks</h3><p>Special Abilities</p></div>
+                    <div class="grid-item"><h3>Support Us</h3><p>Help server growth</p></div>
+                    <div class="grid-item"><h3>Refunds</h3><p>Case-by-case</p></div>
+                    <div class="grid-item"><h3>Delivery</h3><p>Instant activation</p></div>
+                    <div class="grid-item"><h3>Questions?</h3><p>Contact staff</p></div>
+                    <div class="grid-item"><h3>Thank You!</h3><p>We appreciate you</p></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Copyright -->
+    <div class="copyright">
+        © 2025 Redstone Network. All rights reserved.
+    </div>
+    
+    <script>
+        // Page navigation
+        function showPage(pageId) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(page => {
+                page.classList.remove('active-page');
+            });
+            
+            // Show selected page
+            document.getElementById(pageId).classList.add('active-page');
+            
+            // Update active nav link
+            document.querySelectorAll('.nav-links a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('onclick')?.includes(pageId) || 
+                   (pageId === 'home' && link.getAttribute('href') === '#' && link.textContent === 'Home')) {
+                    link.classList.add('active');
+                }
+            });
+            
+            return false;
+        }
+        
+        // Make Discord link open in new tab without activating navigation
+        document.querySelector('a[href*="discord.gg"]').addEventListener('click', function(e) {
+            e.stopPropagation();
+        });
+    </script>
+</body>
+</html>
